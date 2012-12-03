@@ -12,3 +12,8 @@ servers of Apache, Nginx, etc.
 ```
 ./stop.sh
 ```
+
+### configuration file
+```
+./config.js
+```
