@@ -1,7 +1,7 @@
 # node-reverse-proxy
 
 A small, simple and fast reverse proxy built on Node.js to replace virtual
-servers of Apache, Nginx, etc. All the configurations can be found in `config.js`.
+servers of Apache, Nginx, etc.
 
 ### start/restart server
 ```
@@ -12,3 +12,7 @@ servers of Apache, Nginx, etc. All the configurations can be found in `config.js
 ```
 ./stop.sh
 ```
+
+## configuration
+If a configuration file exists at `~/.reverse-proxy-server/config.js` it is
+loaded. If not default configurations are read from `config.js`.

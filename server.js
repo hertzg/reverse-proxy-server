@@ -1,6 +1,16 @@
-var http = require('http'),
+var fs = require('fs'),
+    http = require('http'),
     url = require('url'),
     config = require('./config.js');
+
+var config = (function () {
+    var configFile = '~/.reverse-proxy-server/config.js';
+    if (fs.existsSync(configFile)) {
+        return require(configFile);
+    } else {
+        return require('./config.js');
+    }
+})();
 
 function createMap (objectMap) {
     var map = Object.create(null);
