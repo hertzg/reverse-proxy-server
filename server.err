@@ -1,0 +1,15 @@
+
+events.js:71
+        throw arguments[1]; // Unhandled 'error' event
+                       ^
+Error: listen EACCES
+    at errnoException (net.js:769:11)
+    at Server._listen2 (net.js:892:19)
+    at listen (net.js:936:10)
+    at Server.listen (net.js:985:5)
+    at Object.<anonymous> (/home/archil/git/reverse-proxy-server/server.js:88:4)
+    at Module._compile (module.js:449:26)
+    at Object.Module._extensions..js (module.js:467:10)
+    at Module.load (module.js:356:32)
+    at Function.Module._load (module.js:312:12)
+    at Module.runMain (module.js:492:10)

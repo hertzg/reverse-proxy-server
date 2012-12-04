@@ -4,7 +4,8 @@ var fs = require('fs'),
     config = require('./config.js');
 
 var config = (function () {
-    var configFile = '~/.reverse-proxy-server/config.js';
+    var homeDir = process.env.HOME;
+    var configFile = homeDir + '/.reverse-proxy-server/config.js';
     if (fs.existsSync(configFile)) {
         return require(configFile);
     } else {
