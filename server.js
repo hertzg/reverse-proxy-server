@@ -1,7 +1,6 @@
 var fs = require('fs'),
     http = require('http'),
-    url = require('url'),
-    config = require('./config.js');
+    url = require('url');
 
 var config = (function () {
     var homeDir = process.env.HOME;
