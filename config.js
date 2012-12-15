@@ -1,4 +1,11 @@
-exports.port = 8080;
+exports.port = 80;
+
+// Examples:
+// exports.host = '';            // bind to all interfaces
+// exports.host = '0.0.0.0';     // bind to all ipv4 interfaces
+// exports.host = '::';          // bind to all ipv6 interfaces
+// exports.host = '<ipAddress>'; // bind to a specific ip address
+exports.host = '';
 
 // Example:
 // exports.hosts = {

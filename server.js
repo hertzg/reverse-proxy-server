@@ -2,14 +2,18 @@ var fs = require('fs'),
     http = require('http'),
     url = require('url');
 
+var verbose = process.argv.indexOf('-v') != -1;
+
 var config = (function () {
     var homeDir = process.env.HOME;
     var configFile = homeDir + '/.reverse-proxy-server/config.js';
-    if (fs.existsSync(configFile)) {
-        return require(configFile);
-    } else {
-        return require('./config.js');
+    if (!fs.existsSync(configFile)) {
+        configFile = './config.js';
     }
+    if (verbose) {
+        console.log('Reading config file from "' + configFile + '".');
+    }
+    return require(configFile);
 })();
 
 function createMap (objectMap) {
@@ -76,7 +80,9 @@ http.createServer(function (req, res) {
     var hostHeader = req.headers['host'],
         redirectHost = redirectHosts[hostHeader];
     if (redirectHost) {
-        res.writeHead(302, { location: redirectHost });
+        res.writeHead(302, {
+            location: redirectHost + req.url,
+        });
         res.end();
     } else {
         var host = hosts[hostHeader];
@@ -84,4 +90,8 @@ http.createServer(function (req, res) {
         else sendError(404);
     }
 
-}).listen(config.port);
+}).listen(config.port, config.host);
+
+if (verbose) {
+    console.log('Listening to port ' + config.port + '.');
+}
