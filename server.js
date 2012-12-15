@@ -80,7 +80,7 @@ http.createServer(function (req, res) {
     var hostHeader = req.headers['host'],
         redirectHost = redirectHosts[hostHeader];
     if (redirectHost) {
-        res.writeHead(302, {
+        res.writeHead(301, {
             location: redirectHost + req.url,
         });
         res.end();
