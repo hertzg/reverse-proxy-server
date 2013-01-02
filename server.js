@@ -86,8 +86,16 @@ http.createServer(function (req, res) {
     var hostHeader = req.headers['host'],
         redirectHost = redirectHosts[hostHeader];
     if (redirectHost) {
-        res.writeHead(301, {
-            location: redirectHost + req.url,
+    	var redirectCode = 301;
+    	var targetHost = redirectHost;
+    	
+		if(typeof redirectHost == "object") {
+			redirectCode = redirectHost.code || 301;
+			targetHost = redirectHost.host;
+		}
+    
+        res.writeHead(redirectCode, {
+            location: targetHost + req.url,
         });
         res.end();
     } else {
