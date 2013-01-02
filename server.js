@@ -16,6 +16,14 @@ var config = (function () {
     return require(configFile);
 })();
 
+var removeHeaders = config.removeHeaders;
+if (!(removeHeaders instanceof Array)) {
+    if (verbose) {
+        console.error('Invalid value for removeHeaders. Using default.');
+    }
+    removeHeaders = [];
+}
+
 function createMap (objectMap) {
     var map = Object.create(null);
     for (var i in objectMap) {
@@ -44,6 +52,10 @@ http.createServer(function (req, res) {
             errorHandler = function () {
                 res.end();
             };
+
+            removeHeaders.forEach(function (headerName) {
+                delete proxyRes.headers[headerName];
+            });
 
             res.writeHead(proxyRes.statusCode, proxyRes.headers);
             proxyRes.on('data', function (data) {

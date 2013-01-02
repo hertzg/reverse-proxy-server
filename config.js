@@ -28,3 +28,11 @@ exports.hosts = {
 // };
 exports.redirectHosts = {
 };
+
+// Example:
+// exports.removeHeaders = [
+//     'pragma',
+//     'server',
+//     'x-powered-by',
+// ];
+exports.removeHeaders = [];
