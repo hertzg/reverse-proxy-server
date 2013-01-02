@@ -1,4 +1,4 @@
-exports.port = 8080;
+exports.port = 80;
 
 // Examples:
 // exports.host = '';            // bind to all interfaces
