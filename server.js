@@ -16,13 +16,7 @@ var config = (function () {
     return require(configFile);
 })();
 
-var removeHeaders = config.removeHeaders;
-if (!(removeHeaders instanceof Array)) {
-    if (verbose) {
-        console.error('Invalid value for removeHeaders. Using default.');
-    }
-    removeHeaders = [];
-}
+var removeHeaders = config.removeHeaders || [];
 
 function createMap (objectMap) {
     var map = Object.create(null);
