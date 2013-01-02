@@ -1,4 +1,4 @@
-exports.port = 80;
+exports.port = 8080;
 
 // Examples:
 // exports.host = '';            // bind to all interfaces
@@ -26,15 +26,15 @@ exports.hosts = {
 //    'www.example.com': 'http://example.com/',
 //    'my.example.com': 'http://example.com/my',
 //    'your.example.com': {
-//          code: 301,
-//          host: 'http://example.com/your'
+//        code: 301, // moved permanently
+//        host: 'http://example.com/your',
 //    },
 //    'his.example.com': {
-//          code: 307,  //Temporary Redirect
-//          host: 'http://example.com/your'
+//        code: 307, // temporary redirect
+//        host: 'http://example.com/his',
 //    },
 // };
-// Default redirect code is 301
+// Note: Default code is 301 (moved permanently)
 exports.redirectHosts = {
 };
 

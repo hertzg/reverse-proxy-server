@@ -16,8 +16,6 @@ var config = (function () {
     return require(configFile);
 })();
 
-var removeHeaders = config.removeHeaders || [];
-
 function createMap (objectMap) {
     var map = Object.create(null);
     for (var i in objectMap) {
@@ -26,8 +24,21 @@ function createMap (objectMap) {
     return map;
 }
 
-var hosts = createMap(config.hosts),
-    redirectHosts = createMap(config.redirectHosts);
+var removeHeaders = config.removeHeaders || [];
+var hosts = createMap(config.hosts);
+
+(function (hosts) {
+    for (var i in hosts) {
+        var host = hosts[i];
+        if (typeof host == 'string') {
+            hosts[i] = {
+                code: 301,
+                host: host,
+            };
+        }
+    }
+})(config.redirectHosts);
+var redirectHosts = createMap(config.redirectHosts);
 
 http.createServer(function (req, res) {
 
@@ -86,16 +97,8 @@ http.createServer(function (req, res) {
     var hostHeader = req.headers['host'],
         redirectHost = redirectHosts[hostHeader];
     if (redirectHost) {
-    	var redirectCode = 301;
-    	var targetHost = redirectHost;
-    	
-		if(typeof redirectHost == "object") {
-			redirectCode = redirectHost.code || 301;
-			targetHost = redirectHost.host;
-		}
-    
-        res.writeHead(redirectCode, {
-            location: targetHost + req.url,
+        res.writeHead(redirectHost.code, {
+            location: redirectHost.host + req.url,
         });
         res.end();
     } else {
