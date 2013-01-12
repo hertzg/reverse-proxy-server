@@ -23,7 +23,7 @@ exports.hosts = {
 
 // Example:
 // exports.redirectHosts = {
-//    'www.example.com': 'http://example.com/',
+//    'www.example.com': 'http://example.com',
 //    'my.example.com': 'http://example.com/my',
 //    'your.example.com': {
 //        code: 301, // moved permanently
@@ -34,7 +34,8 @@ exports.hosts = {
 //        host: 'http://example.com/his',
 //    },
 // };
-// Note: Default code is 301 (moved permanently)
+// Note 1: No trailing slashes are required
+// Note 2: Default redirect code is 301 (moved permanently)
 exports.redirectHosts = {
 };
 
