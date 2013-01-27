@@ -24,7 +24,7 @@ function createMap (objectMap) {
     return map;
 }
 
-var removeHeaders = config.removeHeaders || [];
+var removeHeaders = config.removeHeaders;
 var hosts = createMap(config.hosts);
 
 (function (hosts) {
@@ -58,17 +58,12 @@ http.createServer(function (req, res) {
                 res.end();
             };
 
-            removeHeaders.forEach(function (headerName) {
-                delete proxyRes.headers[headerName];
-            });
+            for (var i in removeHeaders) {
+                delete proxyRes.headers[removeHeaders[i]];
+            }
 
             res.writeHead(proxyRes.statusCode, proxyRes.headers);
-            proxyRes.on('data', function (data) {
-                res.write(data);
-            });
-            proxyRes.on('end', function () {
-                res.end();
-            });
+            proxyRes.pipe(res);
 
         });
 
@@ -80,12 +75,7 @@ http.createServer(function (req, res) {
             errorHandler.apply(this, arguments);
         });
 
-        req.on('data', function (data) {
-            proxyReq.write(data);
-        });
-        req.on('end', function () {
-            proxyReq.end();
-        });
+        req.pipe(proxyReq);
 
     }
 
