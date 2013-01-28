@@ -27,15 +27,16 @@ function createMap (objectMap) {
 var removeHeaders = config.removeHeaders;
 var hosts = createMap(config.hosts);
 
-(function (hosts) {
-    for (var i in hosts) {
-        var host = hosts[i];
-        if (typeof host == 'string') {
-            hosts[i] = { code: 301, host: host };
+var redirectHosts = Object.create(null);
+(function () {
+    for (var i in config.redirectHosts) {
+        var redirectHost = config.redirectHosts[i];
+        if (typeof redirectHost == 'string') {
+            redirectHost = { code: 301, host: redirectHost };
         }
+        redirectHosts[i] = redirectHost;
     }
-})(config.redirectHosts);
-var redirectHosts = createMap(config.redirectHosts);
+})();
 
 http.createServer(function (req, res) {
 
