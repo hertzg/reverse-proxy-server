@@ -48,8 +48,8 @@ exports.redirectHosts = {
 exports.removeHeaders = [];
 
 // Example:
-// exports.errorPages = {
-//     404: 'custom-error-pages/404.html',
+// exports.replaceErrorPages = {
+//     404: 'replace-error-pages/404.html',
 //     503: 'my-error-pages/internal-server-error.html',
 // };
-exports.errorPages = {};
+exports.replaceErrorPages = {};

@@ -36,12 +36,12 @@ var redirectHosts = Object.create(null);
 
 var removeHeaders = config.removeHeaders;
 
-var errorPages = Object.create(null);
+var replaceErrorPages = Object.create(null);
 (function () {
-    for (var i in config.errorPages) {
-        var filename = config.errorPages[i];
+    for (var i in config.replaceErrorPages) {
+        var filename = config.replaceErrorPages[i];
         try {
-            errorPages[i] = fs.readFileSync(filename);
+            replaceErrorPages[i] = fs.readFileSync(filename);
         } catch (e) {
             console.error('Failed to read error page "' + filename + '"');
         }
@@ -81,10 +81,10 @@ http.createServer(function (req, res) {
             }
 
             var statusCode = proxyRes.statusCode;
-            var errorPage = errorPages[statusCode];
-            if (errorPage) {
+            var replaceErrorPage = replaceErrorPages[statusCode];
+            if (replaceErrorPage) {
                 res.statusCode = statusCode;
-                res.end(errorPage);
+                res.end(replaceErrorPage);
                 proxyReq.abort();
             } else {
                 res.writeHead(statusCode, proxyRes.headers);
