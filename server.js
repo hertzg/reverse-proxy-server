@@ -16,16 +16,12 @@ var config = (function () {
     return require(configFile);
 })();
 
-function createMap (objectMap) {
-    var map = Object.create(null);
-    for (var i in objectMap) {
-        map[i] = objectMap[i];
+var hosts = Object.create(null);
+(function () {
+    for (var i in config.hosts) {
+        hosts[i] = config.hosts[i];
     }
-    return map;
-}
-
-var removeHeaders = config.removeHeaders;
-var hosts = createMap(config.hosts);
+})();
 
 var redirectHosts = Object.create(null);
 (function () {
@@ -37,6 +33,25 @@ var redirectHosts = Object.create(null);
         redirectHosts[i] = redirectHost;
     }
 })();
+
+var removeHeaders = config.removeHeaders;
+
+var errorPages = Object.create(null);
+(function () {
+    for (var i in config.errorPages) {
+        var filename = config.errorPages[i];
+        try {
+            errorPages[i] = fs.readFileSync(filename);
+        } catch (e) {
+            console.error('Failed to read error page "' + filename + '"');
+        }
+    }
+})();
+
+var defaultErrorPages = {
+    404: fs.readFileSync('error-pages/404.html'),
+    502: fs.readFileSync('error-pages/502.html'),
+};
 
 http.createServer(function (req, res) {
 
@@ -65,8 +80,16 @@ http.createServer(function (req, res) {
                 delete proxyRes.headers[removeHeaders[i]];
             }
 
-            res.writeHead(proxyRes.statusCode, proxyRes.headers);
-            proxyRes.pipe(res);
+            var statusCode = proxyRes.statusCode;
+            var errorPage = errorPages[statusCode];
+            if (errorPage) {
+                res.statusCode = statusCode;
+                res.end(errorPage);
+                proxyReq.abort();
+            } else {
+                res.writeHead(statusCode, proxyRes.headers);
+                proxyRes.pipe(res);
+            }
 
         });
 
@@ -76,8 +99,13 @@ http.createServer(function (req, res) {
     }
 
     function sendError (statusCode) {
-        res.setHeader('Content-Type', 'text/plain; charset=UTF-8');
-        res.end(statusCode + ' ' + http.STATUS_CODES[statusCode]);
+        res.statusCode = statusCode;
+        res.setHeader('Content-Type', 'text/html; charset=UTF-8');
+        var content = defaultErrorPages[statusCode];
+        if (!content) {
+            content = statusCode + ' ' + http.STATUS_CODES[statusCode];
+        }
+        res.end(content);
     }
 
     var hostHeader = req.headers['host'],
