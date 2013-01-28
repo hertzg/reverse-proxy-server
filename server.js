@@ -31,10 +31,7 @@ var hosts = createMap(config.hosts);
     for (var i in hosts) {
         var host = hosts[i];
         if (typeof host == 'string') {
-            hosts[i] = {
-                code: 301,
-                host: host,
-            };
+            hosts[i] = { code: 301, host: host };
         }
     }
 })(config.redirectHosts);
@@ -44,19 +41,24 @@ http.createServer(function (req, res) {
 
     function proxify (req, res, host) {
 
+        function sendBadGateway () {
+            sendError(502);
+        }
+
         var requestConfig = {
             host: host.host,
             port: host.port,
             method: req.method,
             path: req.url,
-            headers: req.headers
+            headers: req.headers,
         };
 
         var proxyReq = http.request(requestConfig, function (proxyRes) {
 
-            errorHandler = function () {
+            proxyReq.removeListener('error', sendBadGateway);
+            proxyReq.on('error', function () {
                 res.end();
-            };
+            });
 
             for (var i in removeHeaders) {
                 delete proxyRes.headers[removeHeaders[i]];
@@ -67,14 +69,7 @@ http.createServer(function (req, res) {
 
         });
 
-        var errorHandler = function () {
-            sendError(502);
-        };
-
-        proxyReq.on('error', function () {
-            errorHandler.apply(this, arguments);
-        });
-
+        proxyReq.on('error', sendBadGateway);
         req.pipe(proxyReq);
 
     }
