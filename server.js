@@ -41,15 +41,15 @@ if (cluster.isMaster) {
         for (var i in config.replaceErrorPages) {
             var filename = config.replaceErrorPages[i];
             try {
-                replaceErrorPages[i] = fs.readFileSync(filename);
+                replaceErrorPages[i] = fs.readFileSync(filename, 'utf8');
             } catch (e) {
                 console.error('Failed to read error page "' + filename + '"');
             }
         }
 
         var defaultErrorPages = {
-            404: fs.readFileSync('error-pages/404.html'),
-            502: fs.readFileSync('error-pages/502.html'),
+            404: fs.readFileSync('error-pages/404.html', 'utf8'),
+            502: fs.readFileSync('error-pages/502.html', 'utf8'),
         };
 
         var initMessage = {
