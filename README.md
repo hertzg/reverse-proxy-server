@@ -1,4 +1,4 @@
-# node-reverse-proxy
+# reverse-proxy-server
 
 A small, simple and fast reverse proxy built on Node.js to replace virtual
 servers of Apache, Nginx, etc.
