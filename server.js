@@ -117,13 +117,23 @@ if (cluster.isMaster) {
                         proxyReq.abort();
                     } else {
                         res.writeHead(statusCode, proxyRes.headers);
-                        proxyRes.pipe(res);
+                        proxyRes.on('data', function (data) {
+                            res.write(data);
+                        });
+                        proxyRes.on('end', function () {
+                            res.end();
+                        });
                     }
 
                 });
 
                 proxyReq.on('error', sendBadGateway);
-                req.pipe(proxyReq);
+                req.on('data', function (data) {
+                    proxyReq.write(data);
+                });
+                req.on('end', function () {
+                    proxyReq.end();
+                });
 
             }
 
