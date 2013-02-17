@@ -134,6 +134,9 @@ if (cluster.isMaster) {
                 req.on('end', function () {
                     proxyReq.end();
                 });
+                res.on('error', function () {
+                    proxyReq.abort();
+                });
 
             }
 
