@@ -1,11 +1,11 @@
-exports.port = 80;
+exports.port = 80
 
 // Examples:
-// exports.host = '';            // bind to all interfaces
-// exports.host = '0.0.0.0';     // bind to all ipv4 interfaces
-// exports.host = '::';          // bind to all ipv6 interfaces
-// exports.host = '<ipAddress>'; // bind to a specific ip address
-exports.host = '';
+// exports.host = ''            // bind to all interfaces
+// exports.host = '0.0.0.0'     // bind to all ipv4 interfaces
+// exports.host = '::'          // bind to all ipv6 interfaces
+// exports.host = '<ipAddress>' // bind to a specific ip address
+exports.host = ''
 
 // Example:
 // exports.hosts = {
@@ -19,7 +19,7 @@ exports.host = '';
 //     },
 // }
 exports.hosts = {
-};
+}
 
 // Example:
 // exports.redirectHosts = {
@@ -33,23 +33,23 @@ exports.hosts = {
 //        code: 307, // temporary redirect
 //        host: 'http://example.com/his',
 //    },
-// };
+// }
 // Note 1: No trailing slashes are required
 // Note 2: Default redirect code is 301 (moved permanently)
 exports.redirectHosts = {
-};
+}
 
 // Example:
 // exports.removeHeaders = [
 //     'pragma',
 //     'server',
 //     'x-powered-by',
-// ];
-exports.removeHeaders = [];
+// ]
+exports.removeHeaders = []
 
 // Example:
 // exports.replaceErrorPages = {
 //     404: 'replace-error-pages/404.html',
 //     503: 'my-error-pages/internal-server-error.html',
-// };
-exports.replaceErrorPages = {};
+// }
+exports.replaceErrorPages = {}
