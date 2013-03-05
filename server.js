@@ -142,8 +142,9 @@ if (cluster.isMaster) {
             }
 
             function sendError (statusCode) {
-                res.statusCode = statusCode
-                res.setHeader('Content-Type', 'text/html; charset=UTF-8')
+                res.writeHead(statusCode, {
+                    'content-type': 'text/html; charset=UTF-8',
+                })
                 var content = defaultErrorPages[statusCode]
                 if (!content) {
                     content = statusCode + ' ' + http.STATUS_CODES[statusCode]
