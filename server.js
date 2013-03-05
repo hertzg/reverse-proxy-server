@@ -135,6 +135,7 @@ if (cluster.isMaster) {
                     proxyReq.end()
                 })
                 res.on('error', function () {
+                    proxyReq.removeListener('error', sendBadGateway)
                     proxyReq.abort()
                 })
 
