@@ -90,6 +90,12 @@ if (cluster.isMaster) {
                     sendError(502)
                 }
 
+                if (req.httpVersion == '1.0') {
+                    req.headers.connection = 'close'
+                } else {
+                    req.headers.connection = 'keep-alive'
+                }
+
                 var requestConfig = {
                     host: host.host,
                     port: host.port,
