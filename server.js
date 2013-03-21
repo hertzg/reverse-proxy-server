@@ -4,6 +4,17 @@ var cluster = require('cluster'),
     os = require('os'),
     url = require('url')
 
+function htmlspecialchars (s) {
+    s = s.replace(/&/g, '&amp;')
+    s = s.replace(/</g, '&lt;')
+    s = s.replace(/>/g, '&gt;')
+    s = s.replace(/"/g, '&quot;')
+    s = s.replace(/'/g, '&#039;')
+    return s
+}
+
+process.chdir(__dirname)
+
 if (cluster.isMaster) {
     (function () {
 
@@ -47,9 +58,11 @@ if (cluster.isMaster) {
             }
         }
 
-        var defaultErrorPages = {
-            404: fs.readFileSync('error-pages/404.html', 'utf8'),
-            502: fs.readFileSync('error-pages/502.html', 'utf8'),
+        var defaultPages = {
+            301: fs.readFileSync('default-pages/301.html', 'utf8'),
+            307: fs.readFileSync('default-pages/307.html', 'utf8'),
+            404: fs.readFileSync('default-pages/404.html', 'utf8'),
+            502: fs.readFileSync('default-pages/502.html', 'utf8'),
         }
 
         var initMessage = {
@@ -59,7 +72,7 @@ if (cluster.isMaster) {
             redirectHosts: redirectHosts,
             removeHeaders: removeHeaders,
             replaceErrorPages: replaceErrorPages,
-            defaultErrorPages: defaultErrorPages,
+            defaultPages: defaultPages,
         }
 
         var numCpus = os.cpus().length
@@ -80,7 +93,7 @@ if (cluster.isMaster) {
             redirectHosts = initMessage.redirectHosts,
             removeHeaders = initMessage.removeHeaders,
             replaceErrorPages = initMessage.replaceErrorPages,
-            defaultErrorPages = initMessage.defaultErrorPages
+            defaultPages = initMessage.defaultPages
 
         http.createServer(function (req, res) {
 
@@ -148,23 +161,24 @@ if (cluster.isMaster) {
             }
 
             function sendError (statusCode) {
+                var html = defaultPages[statusCode]
                 res.writeHead(statusCode, {
-                    'content-type': 'text/html; charset=UTF-8',
+                    'Content-Type': 'text/html; charset=UTF-8',
                 })
-                var content = defaultErrorPages[statusCode]
-                if (!content) {
-                    content = statusCode + ' ' + http.STATUS_CODES[statusCode]
-                }
-                res.end(content)
+                res.end(html)
             }
 
             var hostHeader = req.headers['host'],
                 redirectHost = redirectHosts[hostHeader]
             if (redirectHost) {
-                res.writeHead(redirectHost.code, {
-                    location: redirectHost.host + req.url,
+                var code = redirectHost.code,
+                    location = redirectHost.host + req.url,
+                    html = defaultPages[code].replace(/\{location\}/g, htmlspecialchars(location))
+                res.writeHead(code, {
+                    'Content-Type': 'text/html; charset=UTF-8',
+                    Location: location,
                 })
-                res.end()
+                res.end(html)
             } else {
                 var host = hosts[hostHeader]
                 if (host) proxify(req, res, host)
