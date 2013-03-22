@@ -30,8 +30,12 @@ exports.hosts = {
 //        host: 'http://example.com/your',
 //    },
 //    'his.example.com': {
-//        code: 307, // temporary redirect
+//        code: 302, // found
 //        host: 'http://example.com/his',
+//    },
+//    'her.example.com': {
+//        code: 307, // temporary redirect
+//        host: 'http://example.com/her',
 //    },
 // }
 // Note 1: No trailing slashes are required
