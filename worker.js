@@ -91,14 +91,19 @@ process.on('message', function (initMessage) {
         }
 
         function sendErrorPage (statusCode) {
-            var title = statusCode + ' ' + http.STATUS_CODES[statusCode]
             res.writeHead(statusCode, {
                 'Content-Type': 'text/html; charset=UTF-8',
             })
-            sendPage({
-                head: '<title>' + title + '</title>',
-                body: '<h1>' + title + '</h1>'
-            })
+            var replaceErrorPage = replaceErrorPages[statusCode]
+            if (replaceErrorPage) {
+                res.end(replaceErrorPage)
+            } else {
+                var title = statusCode + ' ' + http.STATUS_CODES[statusCode]
+                sendPage({
+                    head: '<title>' + title + '</title>',
+                    body: '<h1>' + title + '</h1>'
+                })
+            }
         }
 
         function sendPage (e) {
