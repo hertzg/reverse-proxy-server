@@ -18,6 +18,23 @@ process.on('message', function (initMessage) {
         removeHeaders = initMessage.removeHeaders,
         replaceErrorPages = initMessage.replaceErrorPages
 
+    var plainHosts = Object.create(null),
+        regexHosts = [];
+    (function () {
+        for (var i in hosts) {
+            var host = hosts[i]
+            var match = i.match(/^\/(.*)\/(.*?)$/)
+            if (match) {
+                regexHosts.push({
+                    regex: new RegExp(match[1], match[2]),
+                    forward: host,
+                })
+            } else {
+                plainHosts[i] = host
+            }
+        }
+    })()
+
     http.createServer(function (req, res) {
 
         function proxify (req, res, host) {
@@ -110,9 +127,19 @@ process.on('message', function (initMessage) {
                     '<p>The document has moved <a href="' + htmlspecialchars(location) + '">here</a>.</p>'
             })
         } else {
-            var host = hosts[hostHeader]
-            if (host) proxify(req, res, host)
-            else sendErrorPage(404)
+            var plainHost = plainHosts[hostHeader]
+            if (plainHost) {
+                proxify(req, res, plainHost)
+            } else {
+                for (var i in regexHosts) {
+                    var regexHost = regexHosts[i]
+                    if (regexHost.regex.test(hostHeader)) {
+                        proxify(req, res, regexHost.forward)
+                        return
+                    }
+                }
+                sendErrorPage(404)
+            }
         }
 
     }).listen(port, host)
