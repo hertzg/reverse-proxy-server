@@ -59,23 +59,13 @@ process.on('message', function (initMessage) {
                     proxyReq.abort()
                 } else {
                     res.writeHead(statusCode, proxyRes.headers)
-                    proxyRes.on('data', function (data) {
-                        res.write(data)
-                    })
-                    proxyRes.on('end', function () {
-                        res.end()
-                    })
+                    proxyRes.pipe(res)
                 }
 
             })
 
             proxyReq.on('error', sendBadGateway)
-            req.on('data', function (data) {
-                proxyReq.write(data)
-            })
-            req.on('end', function () {
-                proxyReq.end()
-            })
+            req.pipe(proxyReq)
             res.on('error', function () {
                 proxyReq.removeListener('error', sendBadGateway)
                 proxyReq.abort()
