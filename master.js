@@ -51,10 +51,13 @@ var initMessage = {
     replaceErrorPages: replaceErrorPages,
 }
 
-var numCpus = os.cpus().length
-for (var i = 0; i < numCpus; i++) {
+function fork () {
     var worker = cluster.fork()
     worker.on('online', function () {
+        worker.on('exit', fork)
         worker.send(initMessage)
     })
 }
+
+var numCpus = os.cpus().length
+for (var i = 0; i < numCpus; i++) fork()
