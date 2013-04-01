@@ -49,6 +49,12 @@ process.on('message', function (initMessage) {
                 req.headers.connection = 'keep-alive'
             }
 
+            var xForwardedFor = req.headers['X-Forwarded-For']
+            if (xForwardedFor) xForwardedFor += ', '
+            else xForwardedFor = ''
+            xForwardedFor += req.connection.remoteAddress
+            req.headers['X-Forwarded-For'] = xForwardedFor
+
             var requestConfig = {
                 host: host.host,
                 port: host.port,
