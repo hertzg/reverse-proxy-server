@@ -21,6 +21,19 @@ exports.host = ''
 //         host: '127.0.0.1',
 //         port: 8080,
 //     },
+//     'another.example.com': {
+//         host: '127.0.0.1',
+//         port: 8080,
+//         errorPages: {
+//             502: 'error-pages/another.example.com/502-bad-gateway.html',
+//         },
+//         replaceErrorPages: {
+//             403: 'replace-error-pages/another.example.com/403-forbidden.html',
+//             404: 'replace-error-pages/another.example.com/404-not-found.html',
+//             // ...
+//         },
+//     },
+//     // ...
 // }
 exports.hosts = {
 }
@@ -41,6 +54,7 @@ exports.hosts = {
 //        code: 307, // temporary redirect
 //        host: 'http://example.com/her',
 //    },
+//    // ...
 // }
 // Note 1: No trailing slashes are required
 // Note 2: Default redirect code is 301 (moved permanently)
@@ -52,12 +66,24 @@ exports.redirectHosts = {
 //     'pragma',
 //     'server',
 //     'x-powered-by',
+//     // ...
 // ]
-exports.removeHeaders = []
+exports.removeHeaders = [
+]
+
+// Example:
+// exports.errorPages = {
+//     404: 'error-pages/404-not-found.html',
+//     502: 'error-pages/502-bad-gateway.html',
+// }
+exports.errorPages = {
+}
 
 // Example:
 // exports.replaceErrorPages = {
-//     404: 'replace-error-pages/404.html',
-//     503: 'my-error-pages/internal-server-error.html',
+//     403: 'replace-error-pages/404-forbidden.html',
+//     404: 'replace-error-pages/404-not-found.html',
+//     // ...
 // }
-exports.replaceErrorPages = {}
+exports.replaceErrorPages = {
+}
